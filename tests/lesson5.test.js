@@ -21,28 +21,19 @@ test.describe('lesson5', () => {
         mainPage = new MainPage(page);
         navigationBar = new NavigationBar(page);
         registerPage = new RegisterPage(page);
-        // TODO: убрать вывод в консоль
-        console.log(`Имя пользователя в претесте: ${registerPage.user.username}`)
         await mainPage.openPage()
-        await console.log(page.url())
         await navigationBar.clickSignupButton()
-        await console.log(page.url())
         await registerPage.setUserName()
         await registerPage.setPassword()
         await registerPage.setUserEmail()
         await registerPage.clickSignUpButton()
-        //await expect (page.locator('div.nav-link dropdown-toggle cursor-pointer', {hasText:registerPage.user.username}).isVisible())
-        //await expect(page.url()).not.toEqual(process.env.BASE_URL)
+        await page.waitForNavigation()
     })
 
-    test('Регистрация нового пользователя',
+    test('Пользователь зарегистрирован и авторизован',
         async ({page}) => {
-            // TODO: убрать вывод в консоль
-            console.log(`Имя пользователя в тесте регистрации: ${registerPage.user.username}`)
-            // Полный URL
-            console.log(page.url())
-            //
-            // await expect('1').toEqual('1')
-            await expect(page.locator('div.nav-link dropdown-toggle cursor-pointer')).toHaveText(registerPage.user.username)
+            // Запомнить что в Playwright селекторы классов должны быть разделены точками (.)
+            // или объединены через атрибут [class]. Потратил час на поиск проблемы
+            await expect(page.locator('div.nav-link.dropdown-toggle.cursor-pointer')).toHaveText(pupu)
         });
 })
