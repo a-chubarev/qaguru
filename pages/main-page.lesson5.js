@@ -19,7 +19,11 @@ export class NavigationBar{
         this.homeButtonName = 'Home'
         this.loginButtonName = 'Login'
         this.signupButtonName = 'Sign up'
+        this.newArticleButtonName = 'New Article'
     }
+    // TODO: Здесь то же, что и на странице регистрации.
+    //  По идее можно оставить один метод в который буду передавать два параметра и кликать
+    //  И вообще надо разделить либо navbar по состояниям (авторизован юзер или нет)
     async clickConduitButton(){
         await this.page.locator('a.navbar-brand', { hasText: this.conduitButtonName }).click();
     }
@@ -35,6 +39,10 @@ export class NavigationBar{
     async clickSignupButton(){
         await this.page.locator('a.nav-link', { hasText: this.signupButtonName }).click();
     }
+    async clickNewArticleButton(){
+        await this.page.locator('a.nav-link', { hasText: this.newArticleButtonName }).click();
+    }
 }
+
 
 MainPage.NavigationBar = NavigationBar;
