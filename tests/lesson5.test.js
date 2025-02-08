@@ -11,6 +11,8 @@ import * as dotenv from "dotenv";
 import {config} from "dotenv";
 import { faker } from '@faker-js/faker';
 import {as} from "@faker-js/faker/dist/airline-D6ksJFwG";*/
+import {ArticlePage} from "../pages/article-page.lesson5";
+
 dotenv.config();
 
 
@@ -18,10 +20,12 @@ test.describe.serial('lesson5', () => {
     let mainPage;
     let navigationBar;
     let registerPage;
+    let articlePage;
     test.beforeEach(async ({page}) => {
         mainPage = new MainPage(page);
         navigationBar = new NavigationBar(page);
         registerPage = new RegisterPage(page);
+        articlePage = new ArticlePage(page);
         await mainPage.openPage()
         await navigationBar.clickSignupButton()
         await registerPage.setUserName()
@@ -39,13 +43,13 @@ test.describe.serial('lesson5', () => {
         });
 
     test('Пользователю выводится кнопка публикации новой статьи', async ({page}) => {
-        //TODO: проверить отображение кнопки
-        //const isClickable = await isButtonClickable(page,'a.nav-link', navigationBar.newArticleButtonName)
-        //await expect(isClickable).toBe(true);
-        await mainPage.clickNewArticleButton()
-        await page.waitForNavigation()
-        await expect(page.locator('input.form-control.form-control-lg', {name: 'Article Title'})).toBeVisible()
-        //TODO: проверить, что выполнен переход на страницу публикации статьи
+        await navigationBar.clickNewArticleButton()
+        await articlePage.setTitle()
+        await articlePage.setDescription()
+        await articlePage.setTitleBody()
+        await articlePage.setTags()
+        await articlePage.clickPublishButton()
+        await expect(page.locator('div.container h1')).toHaveText(articlePage.article.title)
     })
 
 

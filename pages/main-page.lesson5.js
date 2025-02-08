@@ -44,5 +44,15 @@ export class NavigationBar{
     }
 }
 
+export class ContainerPage{
+    constructor(page){
+        this.page = page;
+        //TODO: и это надо по идее вынести тоже в отдельный класс,
+        // который будет наследоваться от ContainerPage
+        this.yourFeedButtonName = 'Your Feed';
+        this.globalFeedButtonName = 'Global Feed';
 
+    }
+
+}
 MainPage.NavigationBar = NavigationBar;
