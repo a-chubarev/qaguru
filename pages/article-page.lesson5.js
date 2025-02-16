@@ -1,7 +1,7 @@
 import {Article} from "../mock-data-generators/text.generators";
 
 
-export class ArticlePage {
+export class NewArticlePage {
     constructor(page) {
         this.page = page;
         this.article = new Article();
@@ -41,7 +41,21 @@ export class ArticlePage {
     async clickPublishButton(buttonName = this.articlePublishButtonName) {
         await this.page.getByRole('button', { name: buttonName }).click();
     }
+}
 
+export class ArticlePage {
+    constructor(page) {
+        this.page = page;
+        this.article = new Article();
+        this.articlePublishButtonName = 'Post Comment'
+    }
 
+    async setArticleComment(commentText = this.article.articleText){
+        await this.page.locator('textarea').fill(commentText);
+    }
+
+    async clickPostCommentButton(buttonName = this.articlePublishButtonName) {
+        await this.page.getByRole('button', { name: buttonName }).click();
+    }
 }
 

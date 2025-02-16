@@ -8,3 +8,10 @@ export async function isButtonClickable(page, buttonLocator, buttonText) {
         return false;
     }
 }
+
+//Вернуть индекс рандомной статьи
+export async function getRandomArticleHeader(headers) {
+    const count = await headers.count();
+    const randomIndex = Math.floor(Math.random() * count);
+    return headers.nth(randomIndex);
+}

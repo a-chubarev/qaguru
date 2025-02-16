@@ -1,4 +1,6 @@
 //Главная страница
+import {getRandomArticleHeader} from "../utils/button-utils";
+
 export class MainPage{
     constructor(page){
         this.page = page;
@@ -42,6 +44,9 @@ export class NavigationBar{
     async clickNewArticleButton(){
         await this.page.locator('a.nav-link', { hasText: this.newArticleButtonName }).click();
     }
+    async clickUserNameButton(){
+        await this.page.locator('div.nav-link.dropdown-toggle.cursor-pointer').click();
+    }
 }
 
 export class ContainerPage{
@@ -54,5 +59,42 @@ export class ContainerPage{
 
     }
 
+    async clickYourFeedButton(buttonName = this.yourFeedButtonName) {
+        await this.page.getByRole('button', { name: buttonName }).click();
+    }
+
+    async clickGlobalFeedButton(buttonName = this.globalFeedButtonName) {
+        await this.page.getByRole('button', { name: buttonName }).click();
+    }
+
+    async getArticleHeaders() {
+        return await this.page.locator('a.preview-link h1');
+    }
+
+    async clickRandomArticleHeader(){
+        let articleHeaders = await this.getArticleHeaders()
+        let header = await getRandomArticleHeader(articleHeaders)
+        await header.click();
+    }
+}
+
+export class UserDropDown{
+    constructor(page){
+        this.page = page;
+        this.profileButtonName = 'Profile';
+        this.settingsButtonName = 'Settings';
+        this.logoutButtonName = 'Logout';
+    }
+    async clickProfileButton(){
+        await this.page.locator('a.dropdown-item', { hasText: this.profileButtonName }).click();
+    }
+    async clickSettingsButton(){
+        await this.page.locator('a.dropdown-item', { hasText: this.settingsButtonName }).click();
+    }
+    async clickLogoutButton(){
+        await this.page.locator('a.dropdown-item', { hasText: this.logoutButtonName }).click();
+    }
 }
 MainPage.NavigationBar = NavigationBar;
+MainPage.ContainerPage = ContainerPage;
+MainPage.UserDropDown = UserDropDown;
