@@ -25,7 +25,7 @@ export class NavigationBar{
     }
     // TODO: Здесь то же, что и на странице регистрации.
     //  По идее можно оставить один метод в который буду передавать два параметра и кликать
-    //  И вообще надо разделить либо navbar по состояниям (авторизован юзер или нет)
+    //  И вообще надо разделить navbar по состояниям (авторизован юзер или нет)
     async clickConduitButton(){
         await this.page.locator('a.navbar-brand', { hasText: this.conduitButtonName }).click();
     }

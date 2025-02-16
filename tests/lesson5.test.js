@@ -2,18 +2,10 @@ import { test, expect } from '@playwright/test';
 import { RegisterPage } from '../pages/register-page.lesson5';
 import {ContainerPage, MainPage, NavigationBar, UserDropDown} from '../pages/main-page.lesson5';
 import * as dotenv from 'dotenv';
-import {isButtonClickable} from "../utils/button-utils";
-//import { faker } from '@faker-js/faker'; // Correct import
-/*import { test, expect } from '@playwright/test';
-import {RegisterPage} from "../pages/register-page.lesson5";
-import {MainPage, NavigationBar} from "../pages/main-page.lesson5";
-import * as dotenv from "dotenv";
-import {config} from "dotenv";
-import { faker } from '@faker-js/faker';
-import {as} from "@faker-js/faker/dist/airline-D6ksJFwG";*/
 import {NewArticlePage} from "../pages/article-page.lesson5";
 import {ArticlePage} from "../pages/article-page.lesson5";
 import {SettingsPage} from "../pages/settings-page.lesson5";
+import {LoginPage} from "../pages/login-page.lesson5";
 
 dotenv.config();
 
@@ -27,18 +19,31 @@ test.describe.serial('lesson5', () => {
     let containerPage;
     let userDropDown;
     let settingsPage;
+    let loginPage;
+    let userData;
+
     test.beforeEach(async ({page}) => {
         mainPage = new MainPage(page);
         navigationBar = new NavigationBar(page);
-        registerPage = new RegisterPage(page);
         newArticlePage = new NewArticlePage(page);
         await mainPage.openPage()
-        await navigationBar.clickSignupButton()
-        await registerPage.setUserName()
-        await registerPage.setPassword()
-        await registerPage.setUserEmail()
-        await registerPage.clickSignUpButton()
-        await page.waitForNavigation()
+        if (userData) {
+            loginPage = new LoginPage(page, userData);
+            await navigationBar.clickLoginButton();
+            await loginPage.fillUserEmail()
+            await loginPage.fillUserPassword()
+            await loginPage.clickLoginButton()
+        }
+        else {
+            registerPage = new RegisterPage(page);
+            userData = registerPage.user;
+            await navigationBar.clickSignupButton()
+            await registerPage.setUserName()
+            await registerPage.setPassword()
+            await registerPage.setUserEmail()
+            await registerPage.clickSignUpButton()
+            await page.waitForNavigation()
+        }
     })
 
     test('Пользователь зарегистрирован и авторизован',
@@ -49,7 +54,6 @@ test.describe.serial('lesson5', () => {
         });
 
     test('Пользователь может опубликовать статью', async ({page}) => {
-       //TODO статья не публикуется почему-то
         await navigationBar.clickNewArticleButton()
         await newArticlePage.setTitle()
         await newArticlePage.setDescription()
@@ -57,6 +61,10 @@ test.describe.serial('lesson5', () => {
         await newArticlePage.setTags()
         await newArticlePage.clickPublishButton()
         await expect(page.locator('div.container h1')).toHaveText(newArticlePage.article.title)
+        //Насколько я понял на вкладке Your Feed должны быть статьи пользователя, под которым я авторизован.
+        // Добавил тест на проверку, что там есть хоть что-то, но с ним падает,
+        // т.к. У меня не выводятся статьи на этой вкладке. Закомментировал
+        // await expect(page.locator('div.article-preview')).not.toHaveCount(0)
     })
 
     test('Пользователь может опубликовать комментарий', async ({page}) => {
@@ -67,17 +75,29 @@ test.describe.serial('lesson5', () => {
         await containerPage.clickRandomArticleHeader()
         await articlePage.setArticleComment()
         await articlePage.clickPostCommentButton()
+        await expect(page.locator('p.card-text')).toHaveText(articlePage.article.articleText)
     })
 
     test('Пользователь может сменить пароль', async ({page}) => {
         userDropDown = new UserDropDown(page);
         settingsPage = new SettingsPage(page);
+        console.log(userData)
+        //Меняю пароль пользователя на другой
+        userData.password = settingsPage.changeUser.password;
+        console.log(userData)
         await navigationBar.clickUserNameButton()
         await userDropDown.clickSettingsButton()
-        console.log(page.url())
         await settingsPage.setUserPassword()
         await settingsPage.clickUpdateSettingsButton()
+        //не нашел другого способа проверить что кнопка не отображается
         await expect(page.getByRole('button', { name: settingsPage.updateSettingsButtonName })).toHaveCount(0)
+        await navigationBar.clickUserNameButton()
+        await userDropDown.clickLogoutButton()
+        await navigationBar.clickLoginButton()
+        await loginPage.fillUserEmail()
+        await loginPage.fillUserPassword()
+        await loginPage.clickLoginButton()
+        await expect(page.locator('div.nav-link.dropdown-toggle.cursor-pointer')).toHaveText(userData.username)
     })
 
 
