@@ -6,6 +6,7 @@ import {NewArticlePage} from "../pages/article-page.lesson5";
 import {ArticlePage} from "../pages/article-page.lesson5";
 import {SettingsPage} from "../pages/settings-page.lesson5";
 import {LoginPage} from "../pages/login-page.lesson5";
+import {publishArticle} from "./article-helpers";
 
 dotenv.config();
 
@@ -47,7 +48,7 @@ test.describe.serial('lesson5', () => {
     })
 
     test('Пользователь зарегистрирован и авторизован',
-        async ({page}) => {
+        async ({}) => {
             // Запомнить что в Playwright селекторы классов должны быть разделены точками (.)
             // или объединены через атрибут [class]. Потратил час на поиск проблемы
             await expect(navigationBar.userNameButtonLocator).toHaveText(registerPage.user.username)
@@ -56,11 +57,7 @@ test.describe.serial('lesson5', () => {
     test('Пользователь может опубликовать статью', async ({page}) => {
         articlePage = new ArticlePage(page);
         await navigationBar.clickNewArticleButton()
-        await newArticlePage.setTitle()
-        await newArticlePage.setDescription()
-        await newArticlePage.setTitleBody()
-        await newArticlePage.setTags()
-        await newArticlePage.clickPublishButton()
+        await publishArticle(newArticlePage);
         await expect(articlePage.articleHeaderLocator).toHaveText(newArticlePage.article.title)
         //Насколько я понял на вкладке Your Feed должны быть статьи пользователя, под которым я авторизован.
         // Добавил тест на проверку, что там есть хоть что-то, но с ним падает,
@@ -71,6 +68,9 @@ test.describe.serial('lesson5', () => {
     test('Пользователь может опубликовать комментарий', async ({page}) => {
         articlePage = new ArticlePage(page);
         containerPage = new ContainerPage(page)
+        await navigationBar.clickNewArticleButton()
+        await publishArticle(newArticlePage);
+        await page.waitForNavigation()
         await navigationBar.clickConduitButton()
         await containerPage.clickGlobalFeedButton()
         await containerPage.clickRandomArticleHeader()

@@ -10,7 +10,7 @@ export class Article{
 
     generateTagList(){
         let tagList = []
-        let tagsCount = Math.random(15)
+        let tagsCount = Math.floor(Math.random() * 15)
         for(let i = 0; i < tagsCount; i++){
             let tag = faker.lorem.word()
             tagList.push(tag);
