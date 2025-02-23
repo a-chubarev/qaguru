@@ -16,36 +16,37 @@ export class MainPage{
 export class NavigationBar{
     constructor(page){
         this.page = page;
-        this.conduitButtonName = 'conduit'
-        this.sourceCodeButtonName ='Source code'
-        this.homeButtonName = 'Home'
-        this.loginButtonName = 'Login'
-        this.signupButtonName = 'Sign up'
-        this.newArticleButtonName = 'New Article'
+        this.conduitButtonLocator = this.page.locator('a.navbar-brand', { hasText: "conduit" })
+        this.sourceCodeButtonLocator = this.page.locator('a.nav-link', { hasText: "Source code" })
+        this.homeButtonLocator = this.page.locator('a.nav-link', { hasText: "Home" })
+        this.loginButtonLocator = this.page.locator('a.nav-link', { hasText: "Login" })
+        this.signUpButtonLocator = this.page.locator('a.nav-link', { hasText: "Sign up" })
+        this.newArticleButtonLocator = this.page.locator('a.nav-link', { hasText: "New Article" })
+        this.userNameButtonLocator = this.page.locator('div.nav-link.dropdown-toggle.cursor-pointer')
     }
     // TODO: Здесь то же, что и на странице регистрации.
     //  По идее можно оставить один метод в который буду передавать два параметра и кликать
     //  И вообще надо разделить navbar по состояниям (авторизован юзер или нет)
-    async clickConduitButton(){
-        await this.page.locator('a.navbar-brand', { hasText: this.conduitButtonName }).click();
+    async clickConduitButton(locator = this.conduitButtonLocator){
+        await locator.click();
     }
-    async clickSourceCodeButton(){
-        await this.page.locator('a.nav-link', { hasText: this.sourceCodeButtonName }).click();
+    async clickSourceCodeButton(locator = this.sourceCodeButtonLocator){
+        await locator.click();
     }
-    async clickHomeButton(){
-        await this.page.locator('a.nav-link', { hasText: this.homeButtonName }).click();
+    async clickHomeButton(locator = this.homeButtonLocator){
+        await locator.click();
     }
-    async clickLoginButton(){
-        await this.page.locator('a.nav-link', { hasText: this.loginButtonName }).click();
+    async clickLoginButton(locator = this.loginButtonLocator){
+        await locator.click();
     }
-    async clickSignupButton(){
-        await this.page.locator('a.nav-link', { hasText: this.signupButtonName }).click();
+    async clickSignupButton(locator = this.signUpButtonLocator){
+        await locator.click();
     }
-    async clickNewArticleButton(){
-        await this.page.locator('a.nav-link', { hasText: this.newArticleButtonName }).click();
+    async clickNewArticleButton(locator = this.newArticleButtonLocator){
+        await locator.click();
     }
-    async clickUserNameButton(){
-        await this.page.locator('div.nav-link.dropdown-toggle.cursor-pointer').click();
+    async clickUserNameButton(locator = this.userNameButtonLocator){
+        await locator.click();
     }
 }
 
@@ -54,21 +55,22 @@ export class ContainerPage{
         this.page = page;
         //TODO: и это надо по идее вынести тоже в отдельный класс,
         // который будет наследоваться от ContainerPage
-        this.yourFeedButtonName = 'Your Feed';
-        this.globalFeedButtonName = 'Global Feed';
+        this.globalFeedButtonLocator = this.page.getByRole('button', { name: "Global Feed" })
+        this.yourFeedButtonLocator = this.page.getByRole('button', { name: "Your Feed" })
+        this.articleHeadersLocator = this.page.locator('a.preview-link h1')
 
     }
 
-    async clickYourFeedButton(buttonName = this.yourFeedButtonName) {
-        await this.page.getByRole('button', { name: buttonName }).click();
+    async clickYourFeedButton(button = this.yourFeedButtonLocator) {
+        await button.click();
     }
 
-    async clickGlobalFeedButton(buttonName = this.globalFeedButtonName) {
-        await this.page.getByRole('button', { name: buttonName }).click();
+    async clickGlobalFeedButton(button = this.globalFeedButtonLocator) {
+        await button.click();
     }
 
-    async getArticleHeaders() {
-        return await this.page.locator('a.preview-link h1');
+    async getArticleHeaders(locator = this.articleHeadersLocator) {
+        return await locator;
     }
 
     async clickRandomArticleHeader(){
@@ -81,18 +83,18 @@ export class ContainerPage{
 export class UserDropDown{
     constructor(page){
         this.page = page;
-        this.profileButtonName = 'Profile';
-        this.settingsButtonName = 'Settings';
-        this.logoutButtonName = 'Logout';
+        this.profileButtonLocator = this.page.locator('a.dropdown-item', { hasText: "Profile" })
+        this.settingsButttonLocator = this.page.locator('a.dropdown-item', { hasText: "Settings" })
+        this.logoutButtonLocator = this.page.locator('a.dropdown-item', {hasText: "Logout" })
     }
-    async clickProfileButton(){
-        await this.page.locator('a.dropdown-item', { hasText: this.profileButtonName }).click();
+    async clickProfileButton(locator = this.profileButtonLocator){
+        await locator.click();
     }
-    async clickSettingsButton(){
-        await this.page.locator('a.dropdown-item', { hasText: this.settingsButtonName }).click();
+    async clickSettingsButton(locator = this.settingsButttonLocator){
+        await locator.click();
     }
-    async clickLogoutButton(){
-        await this.page.locator('a.dropdown-item', { hasText: this.logoutButtonName }).click();
+    async clickLogoutButton(locator = this.logoutButtonLocator){
+        await locator.click();
     }
 }
 MainPage.NavigationBar = NavigationBar;

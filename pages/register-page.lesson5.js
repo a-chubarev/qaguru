@@ -5,31 +5,31 @@ export class RegisterPage {
     constructor(page) {
         this.page = page;
         this.user = new User();
-        this.userNameFiledName = 'username'
-        this.userEmailFieldName = 'email'
-        this.userPasswordFieldName = 'password'
-        this.signupButtonName = 'Sign up'
+        this.userNameFieldLocator = this.page.locator(`input[name="username"]`)
+        this.userEmailFieldLocator = this.page.locator(`input[name="email"]`)
+        this.userPasswordFieldLocator = this.page.locator(`input[name="password"]`)
+        this.signUpButtonLocator = this.page.getByRole('button', { name: "Sign up" })
     }
 
         //TODO: подумать, тут по идее должен быть один метод,
     //     в который я передаю два параметра (имя локатора и вводимый текст)
     async setUserName(username = this.user.username,
-                      locatorName = this.userNameFiledName) {
-        await this.page.locator(`input[name="${locatorName}"]`).fill(username);
+                      locator = this.userNameFieldLocator) {
+        await locator.fill(username);
     }
 
     async setUserEmail(email = this.user.email,
-                       locatorName = this.userEmailFieldName) {
-        await this.page.locator(`input[name="${locatorName}"]`).fill(email);
+                       locator = this.userEmailFieldLocator) {
+        await locator.fill(email);
     }
 
     async setPassword(password = this.user.password,
-                      locatorName = this.userPasswordFieldName) {
-        await this.page.locator(`input[name="${locatorName}"]`).fill(password);
+                      locator = this.userPasswordFieldLocator) {
+        await locator.fill(password);
     }
 
-    async clickSignUpButton(buttonName = this.signupButtonName) {
-        await this.page.getByRole('button', { name: buttonName }).click();
+    async clickSignUpButton(button = this.signUpButtonLocator) {
+        await button.click();
     }
 }
 

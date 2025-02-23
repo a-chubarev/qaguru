@@ -9,17 +9,18 @@ export class SettingsPage {
         this.usernameFieldName = 'username'
         this.userShortDescriptionFieldName = 'bio'
         this.userEmailFieldName = 'email'
-        this.userPasswordFieldName = 'password'
-        this.updateSettingsButtonName = 'Update Settings'
+        //this.userPasswordFieldName = 'password'
+        this.userPasswordFieldLocator = this.page.locator(`input[name="password"]`)
+        this.updateSettingsButton = this.page.getByRole('button', { name: 'Update Settings' })
     }
 
     //TODO: дописать для остальных полей
     async setUserPassword(password = this.changeUser.password,
-                      locatorName = this.userPasswordFieldName) {
-        await this.page.locator(`input[name="${locatorName}"]`).fill(password);
+                      locator = this.userPasswordFieldLocator) {
+        await locator.fill(password);
     }
-    async clickUpdateSettingsButton(buttonName = this.updateSettingsButtonName) {
-        await this.page.getByRole('button', { name: buttonName }).click();
+    async clickUpdateSettingsButton(button = this.updateSettingsButton) {
+        await button.click();
     }
 
 }

@@ -81,10 +81,8 @@ test.describe.serial('lesson5', () => {
     test('Пользователь может сменить пароль', async ({page}) => {
         userDropDown = new UserDropDown(page);
         settingsPage = new SettingsPage(page);
-        console.log(userData)
         //Меняю пароль пользователя на другой
         userData.password = settingsPage.changeUser.password;
-        console.log(userData)
         await navigationBar.clickUserNameButton()
         await userDropDown.clickSettingsButton()
         await settingsPage.setUserPassword()
