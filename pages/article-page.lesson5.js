@@ -45,6 +45,9 @@ export class ArticlePage {
         this.article = new Article();
         this.articleCommentFieldLocator = this.page.locator('textarea')
         this.articlePublishButton = this.page.getByRole('button', { name: "Post Comment" })
+        this.articleHeaderLocator = this.page.locator('div.container h1')
+        this.publishedCommentFieldLocator = this.page.locator('p.card-text')
+
     }
 
     async setArticleComment(commentText = this.article.articleText,

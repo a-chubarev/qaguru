@@ -50,17 +50,18 @@ test.describe.serial('lesson5', () => {
         async ({page}) => {
             // Запомнить что в Playwright селекторы классов должны быть разделены точками (.)
             // или объединены через атрибут [class]. Потратил час на поиск проблемы
-            await expect(page.locator('div.nav-link.dropdown-toggle.cursor-pointer')).toHaveText(registerPage.user.username)
+            await expect(navigationBar.userNameButtonLocator).toHaveText(registerPage.user.username)
         });
 
     test('Пользователь может опубликовать статью', async ({page}) => {
+        articlePage = new ArticlePage(page);
         await navigationBar.clickNewArticleButton()
         await newArticlePage.setTitle()
         await newArticlePage.setDescription()
         await newArticlePage.setTitleBody()
         await newArticlePage.setTags()
         await newArticlePage.clickPublishButton()
-        await expect(page.locator('div.container h1')).toHaveText(newArticlePage.article.title)
+        await expect(articlePage.articleHeaderLocator).toHaveText(newArticlePage.article.title)
         //Насколько я понял на вкладке Your Feed должны быть статьи пользователя, под которым я авторизован.
         // Добавил тест на проверку, что там есть хоть что-то, но с ним падает,
         // т.к. У меня не выводятся статьи на этой вкладке. Закомментировал
@@ -75,7 +76,7 @@ test.describe.serial('lesson5', () => {
         await containerPage.clickRandomArticleHeader()
         await articlePage.setArticleComment()
         await articlePage.clickPostCommentButton()
-        await expect(page.locator('p.card-text')).toHaveText(articlePage.article.articleText)
+        await expect(articlePage.publishedCommentFieldLocator).toHaveText(articlePage.article.articleText)
     })
 
     test('Пользователь может сменить пароль', async ({page}) => {
@@ -88,14 +89,14 @@ test.describe.serial('lesson5', () => {
         await settingsPage.setUserPassword()
         await settingsPage.clickUpdateSettingsButton()
         //не нашел другого способа проверить что кнопка не отображается
-        await expect(page.getByRole('button', { name: settingsPage.updateSettingsButtonName })).toHaveCount(0)
+        await expect(settingsPage.updateSettingsButton).toHaveCount(0)
         await navigationBar.clickUserNameButton()
         await userDropDown.clickLogoutButton()
         await navigationBar.clickLoginButton()
         await loginPage.fillUserEmail()
         await loginPage.fillUserPassword()
         await loginPage.clickLoginButton()
-        await expect(page.locator('div.nav-link.dropdown-toggle.cursor-pointer')).toHaveText(userData.username)
+        await expect(navigationBar.userNameButtonLocator).toHaveText(userData.username)
     })
 
 
