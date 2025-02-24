@@ -5,31 +5,22 @@ export class RegisterPage {
     constructor(page) {
         this.page = page;
         this.user = new User();
-        this.userNameFieldLocator = this.page.locator(`input[name="username"]`)
-        this.userEmailFieldLocator = this.page.locator(`input[name="email"]`)
-        this.userPasswordFieldLocator = this.page.locator(`input[name="password"]`)
-        this.signUpButtonLocator = this.page.getByRole('button', { name: "Sign up" })
     }
 
-        //TODO: подумать, тут по идее должен быть один метод,
-    //     в который я передаю два параметра (имя локатора и вводимый текст)
-    async setUserName(username = this.user.username,
-                      locator = this.userNameFieldLocator) {
-        await locator.fill(username);
+    async setUserName(username = this.user.username) {
+        await this.page.locator(`input[name="username"]`).fill(username);
     }
 
-    async setUserEmail(email = this.user.email,
-                       locator = this.userEmailFieldLocator) {
-        await locator.fill(email);
+    async setUserEmail(email = this.user.email) {
+        await this.page.locator(`input[name="email"]`).fill(email);
     }
 
-    async setPassword(password = this.user.password,
-                      locator = this.userPasswordFieldLocator) {
-        await locator.fill(password);
+    async setPassword(password = this.user.password) {
+        await this.page.locator(`input[name="password"]`).fill(password);
     }
 
-    async clickSignUpButton(button = this.signUpButtonLocator) {
-        await button.click();
+    async clickSignUpButton() {
+        await this.page.getByRole('button', { name: "Sign up" }).click();
     }
 }
 

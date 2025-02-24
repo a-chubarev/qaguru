@@ -6,7 +6,7 @@ import {NewArticlePage} from "../pages/article-page.lesson5";
 import {ArticlePage} from "../pages/article-page.lesson5";
 import {SettingsPage} from "../pages/settings-page.lesson5";
 import {LoginPage} from "../pages/login-page.lesson5";
-import {publishArticle} from "./article-helpers";
+import {publishArticle} from "../utils/article-helpers";
 
 dotenv.config();
 
@@ -47,15 +47,15 @@ test.describe.serial('lesson5', () => {
         }
     })
 
-    test('Пользователь зарегистрирован и авторизован',
-        async ({}) => {
-            // Запомнить что в Playwright селекторы классов должны быть разделены точками (.)
-            // или объединены через атрибут [class]. Потратил час на поиск проблемы
-            await expect(navigationBar.userNameButtonLocator).toHaveText(registerPage.user.username)
-        });
+    // test('Пользователь зарегистрирован и авторизован',
+    //     async ({}) => {
+    //         // Запомнить что в Playwright селекторы классов должны быть разделены точками (.)
+    //         // или объединены через атрибут [class]. Потратил час на поиск проблемы
+    //     });
 
     test('Пользователь может опубликовать статью', async ({page}) => {
         articlePage = new ArticlePage(page);
+        await expect(navigationBar.userNameButtonLocator).toHaveText(registerPage.user.username)
         await navigationBar.clickNewArticleButton()
         await publishArticle(newArticlePage);
         await expect(articlePage.articleHeaderLocator).toHaveText(newArticlePage.article.title)
@@ -68,6 +68,7 @@ test.describe.serial('lesson5', () => {
     test('Пользователь может опубликовать комментарий', async ({page}) => {
         articlePage = new ArticlePage(page);
         containerPage = new ContainerPage(page)
+        await expect(navigationBar.userNameButtonLocator).toHaveText(registerPage.user.username)
         await navigationBar.clickNewArticleButton()
         await publishArticle(newArticlePage);
         await page.waitForNavigation()
@@ -82,6 +83,7 @@ test.describe.serial('lesson5', () => {
     test('Пользователь может сменить пароль', async ({page}) => {
         userDropDown = new UserDropDown(page);
         settingsPage = new SettingsPage(page);
+        await expect(navigationBar.userNameButtonLocator).toHaveText(registerPage.user.username)
         //Меняю пароль пользователя на другой
         userData.password = settingsPage.changeUser.password;
         await navigationBar.clickUserNameButton()
