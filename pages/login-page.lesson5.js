@@ -1,16 +1,14 @@
 export class LoginPage {
-    constructor(page, userData) {
+    constructor(page) {
         this.page = page;
-        this.userData = userData
+        this.userEmailFieldLocator = this.page.locator(`input[name="email"]`)
+        this.userPasswordFieldLocator = this.page.locator(`input[name="password"]`)
+        this.signupButton = this.page.getByRole('button', { name: 'Login' })
     }
 
-    async fillUserEmail() {
-        await this.page.locator(`input[name="email"]`).fill(this.userData.email);
-    }
-    async fillUserPassword() {
-        await this.page.locator(`input[name="password"]`).fill(this.userData.password);
-    }
-    async clickLoginButton() {
-        await this.page.getByRole('button', { name: 'Login' }).click();
+    async loginUser(userData) {
+        await this.userEmailFieldLocator.fill(userData.email);
+        await this.userPasswordFieldLocator.fill(userData.password);
+        await this.signupButton.click();
     }
 }

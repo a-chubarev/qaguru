@@ -1,26 +1,16 @@
-import {User} from "../mock-data-generators/user.generators";
-
-
 export class RegisterPage {
     constructor(page) {
         this.page = page;
-        this.user = new User();
+        this.userNameFieldLocator = this.page.locator(`input[name="username"]`)
+        this.userEmailFieldLocator = this.page.locator(`input[name="email"]`)
+        this.userPasswordFieldLocator = this.page.locator(`input[name="password"]`)
+        this.signUpButtonLocator = this.page.getByRole('button', { name: "Sign up" })
     }
 
-    async setUserName(username = this.user.username) {
-        await this.page.locator(`input[name="username"]`).fill(username);
-    }
-
-    async setUserEmail(email = this.user.email) {
-        await this.page.locator(`input[name="email"]`).fill(email);
-    }
-
-    async setPassword(password = this.user.password) {
-        await this.page.locator(`input[name="password"]`).fill(password);
-    }
-
-    async clickSignUpButton() {
-        await this.page.getByRole('button', { name: "Sign up" }).click();
+    async registerUser(userData) {
+        await this.userNameFieldLocator.fill(userData.username)
+        await this.userEmailFieldLocator.fill(userData.email)
+        await this.userPasswordFieldLocator.fill(userData.password)
+        await this.signUpButtonLocator.click()
     }
 }
-

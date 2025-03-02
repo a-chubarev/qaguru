@@ -1,15 +1,16 @@
 import { test, expect } from '@playwright/test';
 import { RegisterPage } from '../pages/register-page.lesson5';
-import {ContainerPage, MainPage, NavigationBar, UserDropDown} from '../pages/main-page.lesson5';
+import {MainPage} from '../pages/main-page.lesson5';
+import {UserDropDown} from '../pages/user-dropdown-menu.lesson5';
+import {ContainerPage} from '../pages/container-page.lesson5';
+import {NavigationBar} from '../pages/navigation-bar.lesson5';
 import * as dotenv from 'dotenv';
-import {NewArticlePage} from "../pages/article-page.lesson5";
+import {NewArticlePage} from "../pages/new-article-page.lesson5";
 import {ArticlePage} from "../pages/article-page.lesson5";
 import {SettingsPage} from "../pages/settings-page.lesson5";
 import {LoginPage} from "../pages/login-page.lesson5";
-import {publishArticle} from "../utils/article-helpers";
-
+import {User} from "../mock-data-generators/user.generators";
 dotenv.config();
-
 
 test.describe.serial('lesson5', () => {
     let mainPage;
@@ -29,35 +30,24 @@ test.describe.serial('lesson5', () => {
         newArticlePage = new NewArticlePage(page);
         await mainPage.openPage()
         if (userData) {
-            loginPage = new LoginPage(page, userData);
+            loginPage = new LoginPage(page);
             await navigationBar.clickLoginButton();
-            await loginPage.fillUserEmail()
-            await loginPage.fillUserPassword()
-            await loginPage.clickLoginButton()
+            await loginPage.loginUser(userData)
         }
         else {
             registerPage = new RegisterPage(page);
-            userData = registerPage.user;
+            userData = new User()
             await navigationBar.clickSignupButton()
-            await registerPage.setUserName()
-            await registerPage.setPassword()
-            await registerPage.setUserEmail()
-            await registerPage.clickSignUpButton()
+            await registerPage.registerUser(userData)
             await page.waitForNavigation()
         }
     })
 
-    // test('Пользователь зарегистрирован и авторизован',
-    //     async ({}) => {
-    //         // Запомнить что в Playwright селекторы классов должны быть разделены точками (.)
-    //         // или объединены через атрибут [class]. Потратил час на поиск проблемы
-    //     });
-
     test('Пользователь может опубликовать статью', async ({page}) => {
         articlePage = new ArticlePage(page);
-        await expect(navigationBar.userNameButtonLocator).toHaveText(registerPage.user.username)
+        await expect(navigationBar.userNameButtonLocator).toHaveText(userData.username)
         await navigationBar.clickNewArticleButton()
-        await publishArticle(newArticlePage);
+        await newArticlePage.publishArticle()
         await expect(articlePage.articleHeaderLocator).toHaveText(newArticlePage.article.title)
         //Насколько я понял на вкладке Your Feed должны быть статьи пользователя, под которым я авторизован.
         // Добавил тест на проверку, что там есть хоть что-то, но с ним падает,
@@ -68,38 +58,31 @@ test.describe.serial('lesson5', () => {
     test('Пользователь может опубликовать комментарий', async ({page}) => {
         articlePage = new ArticlePage(page);
         containerPage = new ContainerPage(page)
-        await expect(navigationBar.userNameButtonLocator).toHaveText(registerPage.user.username)
+        await expect(navigationBar.userNameButtonLocator).toHaveText(userData.username)
         await navigationBar.clickNewArticleButton()
-        await publishArticle(newArticlePage);
+        await newArticlePage.publishArticle()
         await page.waitForNavigation()
         await navigationBar.clickConduitButton()
-        await containerPage.clickGlobalFeedButton()
-        await containerPage.clickRandomArticleHeader()
-        await articlePage.setArticleComment()
-        await articlePage.clickPostCommentButton()
+        await containerPage.moveToRandomArticle()
+        await articlePage.publishArticleComment()
         await expect(articlePage.publishedCommentFieldLocator).toHaveText(articlePage.article.articleText)
     })
 
     test('Пользователь может сменить пароль', async ({page}) => {
         userDropDown = new UserDropDown(page);
         settingsPage = new SettingsPage(page);
-        await expect(navigationBar.userNameButtonLocator).toHaveText(registerPage.user.username)
+        await expect(navigationBar.userNameButtonLocator).toHaveText(userData.username)
         //Меняю пароль пользователя на другой
-        userData.password = settingsPage.changeUser.password;
+        userData.password = new User().password
         await navigationBar.clickUserNameButton()
         await userDropDown.clickSettingsButton()
-        await settingsPage.setUserPassword()
-        await settingsPage.clickUpdateSettingsButton()
+        await settingsPage.changeUserPassword(userData.password)
         //не нашел другого способа проверить что кнопка не отображается
         await expect(settingsPage.updateSettingsButton).toHaveCount(0)
         await navigationBar.clickUserNameButton()
         await userDropDown.clickLogoutButton()
         await navigationBar.clickLoginButton()
-        await loginPage.fillUserEmail()
-        await loginPage.fillUserPassword()
-        await loginPage.clickLoginButton()
+        await loginPage.loginUser(userData)
         await expect(navigationBar.userNameButtonLocator).toHaveText(userData.username)
     })
-
-
 })
