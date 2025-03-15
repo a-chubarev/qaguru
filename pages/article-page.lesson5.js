@@ -1,4 +1,4 @@
-import {Article} from "../mock-data-generators/text.generators";
+import {Article} from "../mock-data-generators";
 
 export class ArticlePage {
     constructor(page) {

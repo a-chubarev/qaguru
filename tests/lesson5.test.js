@@ -1,15 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { RegisterPage } from '../pages/register-page.lesson5';
-import {MainPage} from '../pages/main-page.lesson5';
-import {UserDropDown} from '../pages/user-dropdown-menu.lesson5';
-import {ContainerPage} from '../pages/container-page.lesson5';
-import {NavigationBar} from '../pages/navigation-bar.lesson5';
+import { RegisterPage, MainPage, UserDropDown, ContainerPage, NavigationBar, LoginPage, NewArticlePage, ArticlePage, SettingsPage} from '../pages';
 import * as dotenv from 'dotenv';
-import {NewArticlePage} from "../pages/new-article-page.lesson5";
-import {ArticlePage} from "../pages/article-page.lesson5";
-import {SettingsPage} from "../pages/settings-page.lesson5";
-import {LoginPage} from "../pages/login-page.lesson5";
-import {User} from "../mock-data-generators/user.generators";
+import {User} from "../mock-data-generators";
 dotenv.config();
 
 test.describe.serial('lesson5', () => {
