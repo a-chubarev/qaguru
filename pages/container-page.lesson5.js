@@ -1,4 +1,4 @@
-import {getRandomArticleHeader} from "../utils/button-utils";
+import {getRandomArticleHeader} from "../utils";
 
 export class ContainerPage{
     constructor(page){
